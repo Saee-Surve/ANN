@@ -1,0 +1,34 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Perceptron Learning Algorithm
+def perceptron_learning_algorithm(features, labels, epochs=10):
+    weights, bias = np.zeros(features.shape[1]), 0
+    for _ in range(epochs):
+        for i in range(features.shape[0]):
+            # Update weights and bias if misclassification occurs
+            if labels[i] * (np.dot(features[i], weights) + bias) <= 0:
+                weights += labels[i] * features[i]
+                bias += labels[i]
+    return weights, bias
+
+# Data: 2D points (features) and their class labels (1 or -1)
+input_features = np.array([[2, 3], [3, 3], [4, 2], [6, 5], [7, 7], [8, 6], [1, 1], [2, 1], [3, 2], [4, 1]])
+target_labels = np.array([1, 1, 1, -1, -1, -1, 1, 1, 1, -1])
+
+# Train the perceptron model
+trained_weights, trained_bias = perceptron_learning_algorithm(input_features, target_labels)
+
+# Plotting the results
+plt.scatter(input_features[:, 0], input_features[:, 1], c=target_labels, cmap='bwr', marker='o')
+x_min, x_max = plt.xlim()
+y_min, y_max = plt.ylim()
+xx, yy = np.meshgrid(np.linspace(x_min, x_max, 100), np.linspace(y_min, y_max, 100))
+
+# Generate decision boundary
+decision_boundary = np.sign(np.dot(np.c_[xx.ravel(), yy.ravel()], trained_weights) + trained_bias).reshape(xx.shape)
+plt.contourf(xx, yy, decision_boundary, alpha=0.2, cmap='bwr')
+plt.xlabel('Feature 1')
+plt.ylabel('Feature 2')
+plt.title('Perceptron Decision Boundary')
+plt.show()

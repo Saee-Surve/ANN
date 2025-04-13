@@ -1,0 +1,50 @@
+import numpy as np
+
+# Sigmoid activation function and its derivative
+def sigmoid(x):
+    return 1 / (1 + np.exp(-x))
+
+def sigmoid_derivative(x):
+    return x * (1 - x)
+
+# Input and output for XOR
+X = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])
+Y = np.array([[0], [1], [1], [0]])
+
+# Initialize weights and biases
+np.random.seed(42)
+input_to_hidden_weights = np.random.randn(2, 4)
+hidden_to_output_weights = np.random.randn(4, 1)
+hidden_bias = np.random.randn(1, 4)
+output_bias = np.random.randn(1, 1)
+
+# Learning rate and epochs
+learning_rate = 0.1
+epochs = 10000
+
+# Training loop
+for epoch in range(epochs):
+    # Forward propagation
+    hidden_input = np.dot(X, input_to_hidden_weights) + hidden_bias
+    hidden_output = sigmoid(hidden_input)
+    final_input = np.dot(hidden_output, hidden_to_output_weights) + output_bias
+    predicted_output = sigmoid(final_input)
+    
+    # Calculate error and backpropagate
+    error = Y - predicted_output
+    d_predicted_output = error * sigmoid_derivative(predicted_output)
+    error_hidden_layer = d_predicted_output.dot(hidden_to_output_weights.T)
+    d_hidden_layer = error_hidden_layer * sigmoid_derivative(hidden_output)
+    
+    # Update weights and biases
+    hidden_to_output_weights += hidden_output.T.dot(d_predicted_output) * learning_rate
+    input_to_hidden_weights += X.T.dot(d_hidden_layer) * learning_rate
+    output_bias += np.sum(d_predicted_output, axis=0, keepdims=True) * learning_rate
+    hidden_bias += np.sum(d_hidden_layer, axis=0, keepdims=True) * learning_rate
+
+    if epoch % 1000 == 0:
+        print(f"Epoch {epoch}/{epochs}, Error: {np.mean(error**2)}")
+
+# Final predictions
+print("\nFinal Predictions:")
+print(predicted_output.round())

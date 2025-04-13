@@ -1,0 +1,18 @@
+import tensorflow as tf
+import numpy as np
+
+# Data: ASCII of digits (0-9) and their parity (0 for even, 1 for odd)
+X = np.array([list(format(ord(str(i)), '07b')) for i in range(10)], dtype=np.float32)
+y = np.array([i % 2 for i in range(10)], dtype=np.float32)
+
+# Build the model
+model = tf.keras.Sequential([tf.keras.layers.Dense(1, input_dim=7, activation='sigmoid')])
+model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
+
+# Train the model
+model.fit(X, y, epochs=50, verbose=0)
+
+# Predict and display results
+for i in range(10):
+    pred = model.predict(X[i:i+1])
+    print(f"Input: {i} -> {'Odd' if pred >= 0.5 else 'Even'}")

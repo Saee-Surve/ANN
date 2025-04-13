@@ -1,0 +1,26 @@
+import numpy as np
+
+# McCulloch-Pitts Neural Network for ANDNOT function
+
+def and_not_function(x1, x2):
+    # Weights for the inputs
+    weights = np.array([1, -1])  # Weights for A and NOT B (A AND NOT B)
+    
+    # Input vector
+    inputs = np.array([x1, x2])
+    
+    # Bias (Threshold value)
+    bias = -0.5
+    
+    # Calculate net input (weighted sum of inputs)
+    net_input = np.dot(weights, inputs) + bias
+    
+    # Step function (Threshold Activation Function)
+    return 1 if net_input >= 0 else 0
+
+# Test the ANDNOT function
+print("ANDNOT Function Outputs:")
+for x1 in [0, 1]:
+    for x2 in [0, 1]:
+        output = and_not_function(x1, x2)
+        print(f"Input: ({x1}, {x2}) -> Output: {output}")

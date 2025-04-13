@@ -1,0 +1,28 @@
+import numpy as np
+
+# Activation function (sign function)
+def activation(x):
+    return np.where(x >= 0, 1, -1)
+
+# Store the 4 vectors in a matrix (rows as vectors)
+stored_vectors = np.array([[1, -1, 1, -1], [-1, 1, -1, 1], [1, 1, -1, -1], [-1, -1, 1, 1]])
+
+# Initialize the weight matrix using Hebbian learning rule
+weights = np.zeros((4, 4))
+for vector in stored_vectors:
+    weights += np.outer(vector, vector)
+np.fill_diagonal(weights, 0)  # Set diagonal elements to 0
+
+# Function for recalling the stored vectors
+def recall(input_vector, weights, steps=10):
+    output_vector = input_vector.copy()
+    for _ in range(steps):
+        output_vector = activation(np.dot(output_vector, weights))
+    return output_vector
+
+# Test recall with an input close to one of the stored vectors
+input_vector = np.array([1, -1, -1, -1])  # Input vector to be recalled
+recalled_vector = recall(input_vector, weights)
+
+# Output recalled vector
+print("Recalled Vector: ", recalled_vector)

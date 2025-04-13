@@ -1,0 +1,20 @@
+import numpy as np
+
+# Input and target pairs
+input_vectors = np.array([[1, -1, 1], [-1, 1, -1]])       # 2 input vectors (X1, X2)
+target_vectors = np.array([[1, 1], [-1, -1]])              # 2 target vectors (Y1, Y2)
+
+# Weight matrix using Hebbian learning
+weight_matrix = input_vectors.T @ target_vectors
+
+# Recall: Forward (input → target)
+print("Forward recall:")
+for input_vector in input_vectors:
+    output_target = np.sign(input_vector @ weight_matrix)
+    print(f"Input: {input_vector} → Output (Target): {output_target}")
+
+# Recall: Backward (target → input)
+print("\nBackward recall:")
+for target_vector in target_vectors:
+    output_input = np.sign(target_vector @ weight_matrix.T)
+    print(f"Target: {target_vector} → Output (Input): {output_input}")
